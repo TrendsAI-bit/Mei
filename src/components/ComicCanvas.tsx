@@ -29,7 +29,7 @@ export default function ComicCanvas({
     if (!ref.current) return;
     try {
       const canvas = await html2canvas(ref.current, {
-        backgroundColor: "#ffffff",
+        background: "#ffffff",
         scale: 2,
         useCORS: true,
         allowTaint: true
