@@ -2,6 +2,7 @@
 import { useState } from "react";
 import ComicCanvas from "@/components/ComicCanvas";
 import { MEI_CHARACTER } from "@/lib/character";
+import Image from "next/image";
 
 type Comic = { 
   title: string; 
@@ -121,112 +122,166 @@ export default function Page() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 relative overflow-hidden">
-      {/* Traditional Japanese background elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        {/* Cherry blossoms */}
-        <div className="absolute top-16 left-16 w-6 h-6 bg-pink-200 rounded-full opacity-70 animate-bounce"></div>
-        <div className="absolute top-32 right-24 w-4 h-4 bg-pink-300 rounded-full opacity-60 animate-bounce" style={{animationDelay: '0.5s'}}></div>
-        <div className="absolute bottom-32 left-24 w-5 h-5 bg-pink-200 rounded-full opacity-80 animate-bounce" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-16 right-16 w-3 h-3 bg-pink-300 rounded-full opacity-50 animate-bounce" style={{animationDelay: '1.5s'}}></div>
+    <div className="min-h-screen bg-white font-mono">
+      {/* Manga Book Cover Effect */}
+      <div className="relative">
+        {/* Book Spine Shadow */}
+        <div className="fixed left-0 top-0 w-8 h-full bg-gradient-to-r from-black/20 to-transparent z-10"></div>
         
-        {/* Traditional Japanese patterns */}
-        <div className="absolute top-1/3 left-0 w-2 h-40 bg-gradient-to-b from-transparent via-orange-300 to-transparent opacity-30"></div>
-        <div className="absolute bottom-1/3 right-0 w-2 h-40 bg-gradient-to-b from-transparent via-red-300 to-transparent opacity-30"></div>
-        
-        {/* Wave patterns */}
-        <div className="absolute top-1/2 left-1/4 w-20 h-20 border-2 border-orange-400 rounded-full opacity-20 transform rotate-45"></div>
-        <div className="absolute bottom-1/2 right-1/4 w-16 h-16 border-2 border-red-400 rounded-full opacity-25 transform -rotate-45"></div>
-      </div>
-
-      <main className="relative max-w-7xl mx-auto p-8 space-y-10 z-10">
-        {/* Hero Section */}
-        <header className="text-center space-y-8 pt-12">
-          <div className="flex items-center justify-center space-x-8 mb-10">
-            <div className="relative">
-              <div className="w-32 h-32 rounded-full bg-gradient-to-br from-orange-200 via-red-200 to-pink-200 border-4 border-orange-600 shadow-2xl flex items-center justify-center transform hover:scale-110 transition-transform duration-300">
-                <span className="text-orange-800 text-4xl font-bold">猫</span>
-              </div>
-              {/* Traditional Japanese headband */}
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-20 h-3 bg-red-600 rounded-full border-2 border-orange-800"></div>
+        {/* Main Content */}
+        <div className="relative z-20">
+          {/* Header - Manga Book Cover Style */}
+          <header className="bg-black text-white py-8 relative overflow-hidden">
+            {/* Ink Splash Background */}
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute top-10 left-10 w-32 h-32 bg-black rounded-full transform rotate-12"></div>
+              <div className="absolute bottom-10 right-10 w-24 h-24 bg-black rounded-full transform -rotate-12"></div>
+              <div className="absolute top-1/2 left-1/2 w-20 h-20 bg-black rounded-full transform rotate-45"></div>
             </div>
-            <div>
-              <h1 className="text-7xl font-bold text-orange-800 mb-4 tracking-wider">
-                メイ 漫画 AI
-              </h1>
-              <p className="text-3xl text-red-700 font-medium">
-                Featuring {MEI_CHARACTER.name}
+            
+            <div className="max-w-6xl mx-auto px-8 relative z-10">
+              <div className="flex items-center justify-between">
+                {/* Logo and Title */}
+                <div className="flex items-center space-x-6">
+                  <div className="relative">
+                    <div className="w-20 h-20 bg-white rounded-full border-4 border-black shadow-2xl flex items-center justify-center">
+                      <Image 
+                        src="/asset/Mei.png" 
+                        alt="Mei Character" 
+                        width={64} 
+                        height={64}
+                        className="rounded-full"
+                      />
+                    </div>
+                    {/* Manga Speed Lines */}
+                    <div className="absolute -top-2 -right-2 w-8 h-8 border-t-2 border-r-2 border-white transform rotate-45"></div>
+                    <div className="absolute -bottom-2 -left-2 w-6 h-6 border-b-2 border-l-2 border-white transform rotate-45"></div>
+                  </div>
+                  <div>
+                    <h1 className="text-4xl font-bold tracking-wider mb-2">メイ MANGA AI</h1>
+                    <p className="text-lg opacity-80">Featuring {MEI_CHARACTER.name}</p>
+                  </div>
+                </div>
+                
+                {/* Manga Volume Number */}
+                <div className="text-right">
+                  <div className="text-6xl font-bold opacity-20">01</div>
+                  <div className="text-sm uppercase tracking-widest">Volume</div>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          {/* Main Content Area */}
+          <main className="max-w-6xl mx-auto px-8 py-12">
+            {/* Introduction Panel */}
+            <div className="bg-gray-50 border-2 border-black p-8 mb-12 relative">
+              <div className="absolute top-4 left-4 w-3 h-3 bg-black"></div>
+              <div className="absolute top-4 right-4 w-3 h-3 bg-black"></div>
+              <div className="absolute bottom-4 left-4 w-3 h-3 bg-black"></div>
+              <div className="absolute bottom-4 right-4 w-3 h-3 bg-black"></div>
+              
+              <p className="text-lg leading-relaxed text-gray-800 text-center max-w-4xl mx-auto">
+                Write a story idea and watch {MEI_CHARACTER.name} come to life in a beautiful Japanese manga. 
+                Our AI will create panels, captions, dialogue, and generate artwork featuring your favorite elegant neko character.
               </p>
             </div>
-          </div>
-          
-          <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-10 max-w-5xl mx-auto border-4 border-orange-600 shadow-2xl">
-            <p className="text-2xl text-gray-800 leading-relaxed font-medium">
-              Write a story idea and watch {MEI_CHARACTER.name} come to life in a beautiful Japanese manga! 
-              Our AI will create panels, captions, dialogue, and generate artwork featuring your favorite elegant neko character.
-            </p>
-          </div>
-        </header>
 
-        {/* Input Section */}
-        <section className="bg-white/95 backdrop-blur-sm rounded-3xl p-10 max-w-6xl mx-auto border-4 border-orange-600 shadow-2xl">
-          <div className="grid md:grid-cols-3 gap-8 mb-8">
-            <input 
-              value={idea} 
-              onChange={e => setIdea(e.target.value)} 
-              placeholder="What adventure should メイ go on?" 
-              className="col-span-2 p-8 rounded-2xl text-2xl border-4 border-orange-600 bg-white focus:outline-none focus:ring-4 focus:ring-orange-300 focus:border-orange-500 transition-all duration-300 shadow-lg text-gray-800"
-            />
-            <button 
-              onClick={generate} 
-              disabled={loading} 
-              className="bg-gradient-to-r from-orange-500 to-red-600 text-white p-8 rounded-2xl text-2xl font-bold disabled:opacity-50 disabled:transform-none border-4 border-orange-800 shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 transform"
-            >
-              {loading ? (
-                <div className="flex items-center justify-center space-x-4">
-                  <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
-                  <span>Creating...</span>
+            {/* Input Section - Manga Panel Style */}
+            <div className="bg-white border-2 border-black p-8 mb-12 relative">
+              <div className="absolute top-4 left-4 w-3 h-3 bg-black"></div>
+              <div className="absolute top-4 right-4 w-3 h-3 bg-black"></div>
+              <div className="absolute bottom-4 left-4 w-3 h-3 bg-black"></div>
+              <div className="absolute bottom-4 right-4 w-3 h-3 bg-black"></div>
+              
+              <div className="space-y-6">
+                <div className="grid md:grid-cols-3 gap-6">
+                  <input 
+                    value={idea} 
+                    onChange={e => setIdea(e.target.value)} 
+                    placeholder="What adventure should メイ go on?" 
+                    className="col-span-2 p-4 border-2 border-black bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-all"
+                  />
+                  <button 
+                    onClick={generate} 
+                    disabled={loading} 
+                    className="bg-black text-white p-4 font-bold border-2 border-black hover:bg-white hover:text-black transition-all duration-300 disabled:opacity-50"
+                  >
+                    {loading ? (
+                      <div className="flex items-center justify-center space-x-2">
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        <span>Creating...</span>
+                      </div>
+                    ) : (
+                      <span>Generate Manga</span>
+                    )}
+                  </button>
                 </div>
-              ) : (
-                <span>Generate Manga</span>
-              )}
-            </button>
-          </div>
-          
-          <input 
-            value={style} 
-            onChange={e => setStyle(e.target.value)} 
-            placeholder="Visual style for メイ character (optional)" 
-            className="w-full p-8 rounded-2xl text-2xl border-4 border-orange-600 bg-white focus:outline-none focus:ring-4 focus:ring-orange-300 focus:border-orange-500 transition-all duration-300 shadow-lg text-gray-800"
-          />
-        </section>
+                
+                <input 
+                  value={style} 
+                  onChange={e => setStyle(e.target.value)} 
+                  placeholder="Visual style for メイ character (optional)" 
+                  className="w-full p-4 border-2 border-black bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-all"
+                />
+              </div>
+            </div>
 
-        {/* Comic Display */}
-        {comic && (
-          <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-10 border-4 border-orange-600 shadow-2xl">
-            <ComicCanvas comic={comic} images={images} onReroll={reroll} />
-          </div>
-        )}
+            {/* Comic Display */}
+            {comic && (
+              <div className="bg-white border-2 border-black p-8 relative">
+                <div className="absolute top-4 left-4 w-3 h-3 bg-black"></div>
+                <div className="absolute top-4 right-4 w-3 h-3 bg-black"></div>
+                <div className="absolute bottom-4 left-4 w-3 h-3 bg-black"></div>
+                <div className="absolute bottom-4 right-4 w-3 h-3 bg-black"></div>
+                <ComicCanvas comic={comic} images={images} onReroll={reroll} />
+              </div>
+            )}
 
-        {/* Features Section */}
-        <section className="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto">
-          <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-10 text-center border-4 border-orange-600 shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105">
-            <div className="text-8xl mb-6 font-bold text-orange-600">和</div>
-            <h3 className="text-gray-800 font-bold text-2xl mb-4">Character-Driven</h3>
-            <p className="text-gray-700 text-xl">Every story features {MEI_CHARACTER.name} as the main protagonist</p>
-          </div>
-          <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-10 text-center border-4 border-red-600 shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105">
-            <div className="text-8xl mb-6 font-bold text-red-600">技</div>
-            <h3 className="text-gray-800 font-bold text-2xl mb-4">AI-Powered</h3>
-            <p className="text-gray-700 text-xl">Advanced AI generates stories and artwork with perfect consistency</p>
-          </div>
-          <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-10 text-center border-4 border-pink-600 shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105">
-            <div className="text-8xl mb-6 font-bold text-pink-600">美</div>
-            <h3 className="text-gray-800 font-bold text-2xl mb-4">Manga Style</h3>
-            <p className="text-gray-700 text-xl">Export your manga as high-quality PNG images</p>
-          </div>
-        </section>
-      </main>
+            {/* Features Section - Manga Panels */}
+            <div className="grid md:grid-cols-3 gap-8 mt-12">
+              <div className="bg-gray-50 border-2 border-black p-6 relative">
+                <div className="absolute top-2 left-2 w-2 h-2 bg-black"></div>
+                <div className="absolute top-2 right-2 w-2 h-2 bg-black"></div>
+                <div className="absolute bottom-2 left-2 w-2 h-2 bg-black"></div>
+                <div className="absolute bottom-2 right-2 w-2 h-2 bg-black"></div>
+                
+                <div className="text-center">
+                  <div className="text-4xl font-bold mb-4">和</div>
+                  <h3 className="font-bold text-lg mb-2">Character-Driven</h3>
+                  <p className="text-sm text-gray-700">Every story features {MEI_CHARACTER.name} as the main protagonist</p>
+                </div>
+              </div>
+              
+              <div className="bg-gray-50 border-2 border-black p-6 relative">
+                <div className="absolute top-2 left-2 w-2 h-2 bg-black"></div>
+                <div className="absolute top-2 right-2 w-2 h-2 bg-black"></div>
+                <div className="absolute bottom-2 left-2 w-2 h-2 bg-black"></div>
+                <div className="absolute bottom-2 right-2 w-2 h-2 bg-black"></div>
+                
+                <div className="text-center">
+                  <div className="text-4xl font-bold mb-4">技</div>
+                  <h3 className="font-bold text-lg mb-2">AI-Powered</h3>
+                  <p className="text-sm text-gray-700">Advanced AI generates stories and artwork with perfect consistency</p>
+                </div>
+              </div>
+              
+              <div className="bg-gray-50 border-2 border-black p-6 relative">
+                <div className="absolute top-2 left-2 w-2 h-2 bg-black"></div>
+                <div className="absolute top-2 right-2 w-2 h-2 bg-black"></div>
+                <div className="absolute bottom-2 left-2 w-2 h-2 bg-black"></div>
+                <div className="absolute bottom-2 right-2 w-2 h-2 bg-black"></div>
+                
+                <div className="text-center">
+                  <div className="text-4xl font-bold mb-4">美</div>
+                  <h3 className="font-bold text-lg mb-2">Manga Style</h3>
+                  <p className="text-sm text-gray-700">Export your manga as high-quality PNG images</p>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
     </div>
   );
 }
