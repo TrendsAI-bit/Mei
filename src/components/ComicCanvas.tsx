@@ -30,7 +30,7 @@ export default function ComicCanvas({
     try {
       const canvas = await html2canvas(ref.current, {
         background: "#ffffff",
-        scale: 2,
+        
         useCORS: true,
         allowTaint: true
       });
