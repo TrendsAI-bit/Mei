@@ -136,7 +136,7 @@ export default function Page() {
             <div className="absolute inset-0 opacity-10">
               <div className="absolute top-10 left-10 w-32 h-32 bg-black rounded-full transform rotate-12"></div>
               <div className="absolute bottom-10 right-10 w-24 h-24 bg-black rounded-full transform -rotate-12"></div>
-              <div className="absolute top-1/2 left-1/2 w-20 h-20 bg-black rounded-full transform rotate-45"></div>
+              <div className="absolute top-1/2 left-1/2 w-24 h-24 bg-black rounded-full transform rotate-45"></div>
             </div>
             
             <div className="max-w-6xl mx-auto px-8 relative z-10">
@@ -144,13 +144,13 @@ export default function Page() {
                 {/* Logo and Title */}
                 <div className="flex items-center space-x-6">
                   <div className="relative">
-                    <div className="w-20 h-20 bg-white rounded-full border-4 border-black shadow-2xl flex items-center justify-center">
+                    <div className="w-24 h-24 bg-white rounded-full border-4 border-black shadow-2xl flex items-center justify-center overflow-hidden">
                       <Image 
                         src="/asset/Mei.png" 
                         alt="Mei Character" 
-                        width={64} 
-                        height={64}
-                        className="rounded-full"
+                        width={80} 
+                        height={80}
+                        className="object-cover" priority
                       />
                     </div>
                     {/* Manga Speed Lines */}
