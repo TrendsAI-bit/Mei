@@ -122,7 +122,7 @@ export default function Page() {
   }
 
   return (
-    <div className="min-h-screen bg-white font-mono">
+    <div className="min-h-screen bg-white font-serif">
       {/* Manga Book Cover Effect */}
       <div className="relative">
         {/* Book Spine Shadow */}
@@ -239,7 +239,7 @@ export default function Page() {
             )}
 
             {/* Features Section - Manga Panels */}
-            <div className="grid md:grid-cols-3 gap-8 mt-12">
+            <div className="grid md:grid-cols-3 gap-0 mt-0">
               <div className="bg-gray-50 border-2 border-black p-6 relative">
                 <div className="absolute top-2 left-2 w-2 h-2 bg-black"></div>
                 <div className="absolute top-2 right-2 w-2 h-2 bg-black"></div>
