@@ -26,8 +26,16 @@ export default function Page() {
     try {
       const res = await fetch("/api/generate", { 
         method: "POST", 
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ idea, style }) 
       });
+      
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      
       const data: Comic = await res.json();
       if ((data as any).error) throw new Error((data as any).error);
       setComic(data);
@@ -37,27 +45,37 @@ export default function Page() {
       for (const p of data.panels) {
         const img = await fetch("/api/image", { 
           method: "POST", 
+          headers: {
+            'Content-Type': 'application/json',
+          },
           body: JSON.stringify({ 
             prompt: `${style}. ${p.prompt}. Japanese manga panel style, consistent character design.` 
           }) 
         });
-        const imgData = await img.json();
-        if (imgData.error) {
-          console.error("Image generation error:", imgData.error);
+        
+        if (!img.ok) {
+          console.error("Image generation failed:", img.status);
           outs.push(""); // Add empty string for failed image
         } else {
-          // Handle URL format
-          if (imgData.url) {
-            outs.push(imgData.url);
-          } else {
-            console.error("No image data returned");
+          const imgData = await img.json();
+          if (imgData.error) {
+            console.error("Image generation error:", imgData.error);
             outs.push(""); // Add empty string for failed image
+          } else {
+            // Handle URL format
+            if (imgData.url) {
+              outs.push(imgData.url);
+            } else {
+              console.error("No image data returned");
+              outs.push(""); // Add empty string for failed image
+            }
           }
         }
         setImages([...outs]);
       }
     } catch (e) {
-      alert((e as Error).message);
+      console.error("Generation error:", e);
+      alert(`Error: ${(e as Error).message}`);
     } finally {
       setLoading(false);
     }
@@ -66,65 +84,84 @@ export default function Page() {
   async function reroll(idx: number) {
     if (!comic) return;
     const p = comic.panels[idx];
-    const img = await fetch("/api/image", { 
-      method: "POST", 
-      body: JSON.stringify({ 
-        prompt: `${style}. ${p.prompt}. Japanese manga panel style, consistent character design.` 
-      }) 
-    });
-    const imgData = await img.json();
-    const next = images.slice(); 
-    if (imgData.error) {
-      console.error("Image generation error:", imgData.error);
-      next[idx] = ""; // Clear failed image
-    } else {
-      // Handle URL format
-      if (imgData.url) {
-        next[idx] = imgData.url;
-      } else {
-        console.error("No image data returned for reroll");
-        next[idx] = ""; // Clear failed image
+    try {
+      const img = await fetch("/api/image", { 
+        method: "POST", 
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          prompt: `${style}. ${p.prompt}. Japanese manga panel style, consistent character design.` 
+        }) 
+      });
+      
+      if (!img.ok) {
+        console.error("Image reroll failed:", img.status);
+        return;
       }
+      
+      const imgData = await img.json();
+      const next = images.slice(); 
+      if (imgData.error) {
+        console.error("Image generation error:", imgData.error);
+        next[idx] = ""; // Clear failed image
+      } else {
+        // Handle URL format
+        if (imgData.url) {
+          next[idx] = imgData.url;
+        } else {
+          console.error("No image data returned for reroll");
+          next[idx] = ""; // Clear failed image
+        }
+      }
+      setImages(next);
+    } catch (e) {
+      console.error("Reroll error:", e);
     }
-    setImages(next);
   }
 
   return (
-    <div className="min-h-screen manga-bg">
-      {/* Japanese manga-style background elements */}
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 relative overflow-hidden">
+      {/* Traditional Japanese background elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-8 h-8 border-2 border-black rounded-full ink-splash"></div>
-        <div className="absolute top-40 right-20 w-6 h-6 border-2 border-black rounded-full ink-splash" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-40 left-20 w-4 h-4 border-2 border-black rounded-full ink-splash" style={{animationDelay: '2s'}}></div>
-        <div className="absolute bottom-20 right-10 w-10 h-10 border-2 border-black rounded-full ink-splash" style={{animationDelay: '3s'}}></div>
-        {/* Japanese-style decorative elements */}
-        <div className="absolute top-60 left-1/4 w-2 h-16 border-l-2 border-black"></div>
-        <div className="absolute bottom-60 right-1/4 w-2 h-16 border-r-2 border-black"></div>
+        {/* Cherry blossoms */}
+        <div className="absolute top-16 left-16 w-6 h-6 bg-pink-200 rounded-full opacity-70 animate-bounce"></div>
+        <div className="absolute top-32 right-24 w-4 h-4 bg-pink-300 rounded-full opacity-60 animate-bounce" style={{animationDelay: '0.5s'}}></div>
+        <div className="absolute bottom-32 left-24 w-5 h-5 bg-pink-200 rounded-full opacity-80 animate-bounce" style={{animationDelay: '1s'}}></div>
+        <div className="absolute bottom-16 right-16 w-3 h-3 bg-pink-300 rounded-full opacity-50 animate-bounce" style={{animationDelay: '1.5s'}}></div>
+        
+        {/* Traditional Japanese patterns */}
+        <div className="absolute top-1/3 left-0 w-2 h-40 bg-gradient-to-b from-transparent via-orange-300 to-transparent opacity-30"></div>
+        <div className="absolute bottom-1/3 right-0 w-2 h-40 bg-gradient-to-b from-transparent via-red-300 to-transparent opacity-30"></div>
+        
+        {/* Wave patterns */}
+        <div className="absolute top-1/2 left-1/4 w-20 h-20 border-2 border-orange-400 rounded-full opacity-20 transform rotate-45"></div>
+        <div className="absolute bottom-1/2 right-1/4 w-16 h-16 border-2 border-red-400 rounded-full opacity-25 transform -rotate-45"></div>
       </div>
 
-      <main className="relative max-w-6xl mx-auto p-6 space-y-8">
+      <main className="relative max-w-7xl mx-auto p-8 space-y-10 z-10">
         {/* Hero Section */}
-        <header className="text-center space-y-6 pt-8">
-          <div className="flex items-center justify-center space-x-4 mb-6">
+        <header className="text-center space-y-8 pt-12">
+          <div className="flex items-center justify-center space-x-8 mb-10">
             <div className="relative">
-              <img 
-                src="/asset/Mei.png" 
-                alt={MEI_CHARACTER.name}
-                className="w-20 h-20 rounded-full floating border-2 border-black"
-              />
+              <div className="w-32 h-32 rounded-full bg-gradient-to-br from-orange-200 via-red-200 to-pink-200 border-4 border-orange-600 shadow-2xl flex items-center justify-center transform hover:scale-110 transition-transform duration-300">
+                <span className="text-orange-800 text-4xl font-bold">猫</span>
+              </div>
+              {/* Traditional Japanese headband */}
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-20 h-3 bg-red-600 rounded-full border-2 border-orange-800"></div>
             </div>
             <div>
-              <h1 className="text-5xl font-bold text-black mb-2">
-                メイ Manga AI
+              <h1 className="text-7xl font-bold text-orange-800 mb-4 tracking-wider">
+                メイ 漫画 AI
               </h1>
-              <p className="text-xl text-gray-700 font-medium">
-                Starring {MEI_CHARACTER.name}
+              <p className="text-3xl text-red-700 font-medium">
+                Featuring {MEI_CHARACTER.name}
               </p>
             </div>
           </div>
           
-          <div className="manga-card rounded-2xl p-6 max-w-3xl mx-auto">
-            <p className="text-lg text-black leading-relaxed">
+          <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-10 max-w-5xl mx-auto border-4 border-orange-600 shadow-2xl">
+            <p className="text-2xl text-gray-800 leading-relaxed font-medium">
               Write a story idea and watch {MEI_CHARACTER.name} come to life in a beautiful Japanese manga! 
               Our AI will create panels, captions, dialogue, and generate artwork featuring your favorite elegant neko character.
             </p>
@@ -132,22 +169,22 @@ export default function Page() {
         </header>
 
         {/* Input Section */}
-        <section className="manga-card rounded-2xl p-8 max-w-4xl mx-auto">
-          <div className="grid md:grid-cols-3 gap-4 mb-4">
+        <section className="bg-white/95 backdrop-blur-sm rounded-3xl p-10 max-w-6xl mx-auto border-4 border-orange-600 shadow-2xl">
+          <div className="grid md:grid-cols-3 gap-8 mb-8">
             <input 
               value={idea} 
               onChange={e => setIdea(e.target.value)} 
               placeholder="What adventure should メイ go on?" 
-              className="col-span-2 p-4 rounded-lg text-lg border-2 border-black bg-white focus:outline-none focus:ring-2 focus:ring-black transition-all duration-300"
+              className="col-span-2 p-8 rounded-2xl text-2xl border-4 border-orange-600 bg-white focus:outline-none focus:ring-4 focus:ring-orange-300 focus:border-orange-500 transition-all duration-300 shadow-lg text-gray-800"
             />
             <button 
               onClick={generate} 
               disabled={loading} 
-              className="manga-button p-4 rounded-lg text-lg font-semibold disabled:opacity-50 disabled:transform-none"
+              className="bg-gradient-to-r from-orange-500 to-red-600 text-white p-8 rounded-2xl text-2xl font-bold disabled:opacity-50 disabled:transform-none border-4 border-orange-800 shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 transform"
             >
               {loading ? (
-                <div className="flex items-center justify-center space-x-2">
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <div className="flex items-center justify-center space-x-4">
+                  <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
                   <span>Creating...</span>
                 </div>
               ) : (
@@ -160,33 +197,33 @@ export default function Page() {
             value={style} 
             onChange={e => setStyle(e.target.value)} 
             placeholder="Visual style for メイ character (optional)" 
-            className="w-full p-4 rounded-lg text-lg border-2 border-black bg-white focus:outline-none focus:ring-2 focus:ring-black transition-all duration-300"
+            className="w-full p-8 rounded-2xl text-2xl border-4 border-orange-600 bg-white focus:outline-none focus:ring-4 focus:ring-orange-300 focus:border-orange-500 transition-all duration-300 shadow-lg text-gray-800"
           />
         </section>
 
         {/* Comic Display */}
         {comic && (
-          <div className="manga-card rounded-2xl p-6">
+          <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-10 border-4 border-orange-600 shadow-2xl">
             <ComicCanvas comic={comic} images={images} onReroll={reroll} />
           </div>
         )}
 
         {/* Features Section */}
-        <section className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-          <div className="manga-card rounded-xl p-6 text-center">
-            <div className="text-4xl mb-3 font-bold">メ</div>
-            <h3 className="text-black font-semibold mb-2">Character-Driven</h3>
-            <p className="text-gray-700 text-sm">Every story features {MEI_CHARACTER.name} as the main protagonist</p>
+        <section className="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto">
+          <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-10 text-center border-4 border-orange-600 shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105">
+            <div className="text-8xl mb-6 font-bold text-orange-600">和</div>
+            <h3 className="text-gray-800 font-bold text-2xl mb-4">Character-Driven</h3>
+            <p className="text-gray-700 text-xl">Every story features {MEI_CHARACTER.name} as the main protagonist</p>
           </div>
-          <div className="manga-card rounded-xl p-6 text-center">
-            <div className="text-4xl mb-3 font-bold">イ</div>
-            <h3 className="text-black font-semibold mb-2">AI-Powered</h3>
-            <p className="text-gray-700 text-sm">Advanced AI generates stories and artwork with perfect consistency</p>
+          <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-10 text-center border-4 border-red-600 shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105">
+            <div className="text-8xl mb-6 font-bold text-red-600">技</div>
+            <h3 className="text-gray-800 font-bold text-2xl mb-4">AI-Powered</h3>
+            <p className="text-gray-700 text-xl">Advanced AI generates stories and artwork with perfect consistency</p>
           </div>
-          <div className="manga-card rounded-xl p-6 text-center">
-            <div className="text-4xl mb-3 font-bold">漫</div>
-            <h3 className="text-black font-semibold mb-2">Manga Style</h3>
-            <p className="text-gray-700 text-sm">Export your manga as high-quality PNG images</p>
+          <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-10 text-center border-4 border-pink-600 shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105">
+            <div className="text-8xl mb-6 font-bold text-pink-600">美</div>
+            <h3 className="text-gray-800 font-bold text-2xl mb-4">Manga Style</h3>
+            <p className="text-gray-700 text-xl">Export your manga as high-quality PNG images</p>
           </div>
         </section>
       </main>
